@@ -1,0 +1,59 @@
+pipeline {
+    agent any
+
+    environment {
+        DIRECTORY_PATH         = '/var/lib/jenkins/workspace/SIT753-CD-Pipeline'      
+        TESTING_ENVIRONMENT    = 'QA-Server'
+        PRODUCTION_ENVIRONMENT = 'SainarayanRajasekaran'         
+    }
+
+    options {
+        timestamps()
+    }
+
+    stages {
+        stage('Build') {
+            steps {
+                echo 'Fetch the source code from the directory path specified by the environment variable'
+                echo 'Compile the code and generate any necessary artefacts'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                echo 'Unit tests'
+                echo 'Integration tests'
+            }
+        }
+
+        stage('Code Quality Check') {
+            steps {
+                echo 'Check the quality of the code'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                echo 'Deploy the application to a testing environment specified by the environment variable'
+            }
+        }
+
+        stage('Approval') {
+            steps {
+                echo 'Simulating manual approval (10s pause)...'
+                sleep(time: 10, unit: 'SECONDS')  // required 10-second pause
+            }
+        }
+
+        stage('Deploy to Production') {
+            steps {
+                echo "Deploying the code to the production environment: ${env.PRODUCTION_ENVIRONMENT}"
+            }
+        }
+    }
+
+    post {
+        success { echo 'Pipeline executed successfully!' }
+        failure { echo 'Pipeline failed. Please check the logs above.' }
+    }
+}
